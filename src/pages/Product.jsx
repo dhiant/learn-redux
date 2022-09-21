@@ -19,19 +19,40 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCarT, removeFromCart } from "../reducer/ProductSlice";
 import Navbar from "../components/Navbar";
+import LogInCard from "../components/LogInCard";
 
 function Product() {
   const [fetchProduct, setFetchProduct] = useState([]);
+  const [showLogInCard, setShowLogInCard] = useState(false);
+
   let { productId } = useParams();
   const dispatch = useDispatch();
   const productInStore = useSelector((state) => state.productList.products);
   const baseURL = `https://fakestoreapi.com/products/${productId}`;
   const getProductList = async () => {
-    const { data } = await axios.get(baseURL);
-    setFetchProduct(data);
+    await axios
+      .get(baseURL)
+      .then((response) => {
+        let data = response.data;
+        setFetchProduct(data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
+      });
   };
+
   useEffect(() => {
     getProductList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddItemToStore = (fetchProduct) => {
@@ -40,10 +61,12 @@ function Product() {
   const handleRemoveItemFromStore = (fetchProduct) => {
     dispatch(removeFromCart(fetchProduct));
   };
+  const handleOpenLogIn = () => setShowLogInCard(true);
+  const handleCloseLogIn = () => setShowLogInCard(false);
   return (
     <>
       <Navbar />
-      <Container sx={{ maxWidth: "1300px", p: 4 }}>
+      <Container sx={{ maxWidth: "1300px", p: 4, position: "relative" }}>
         <Container maxWidth="md" sx={{ mt: 10 }}>
           <Card sx={{ p: 6, boxShadow: 4 }}>
             <Stack
@@ -139,6 +162,7 @@ function Product() {
                             backgroundColor: "#ff9800",
                           },
                         }}
+                        onClick={handleOpenLogIn}
                       >
                         Add to Cart
                       </Button>
@@ -150,6 +174,12 @@ function Product() {
           </Card>
         </Container>
       </Container>
+      {showLogInCard && (
+        <LogInCard
+          showLogInCard={showLogInCard}
+          handleCloseLogIn={handleCloseLogIn}
+        />
+      )}
     </>
   );
 }
