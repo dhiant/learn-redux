@@ -66,9 +66,11 @@ function Product() {
   return (
     <>
       <Navbar />
-      <Container sx={{ maxWidth: "1300px", p: 4, position: "relative" }}>
-        <Container maxWidth="md" sx={{ mt: 10 }}>
-          <Card sx={{ p: 6, boxShadow: 4 }}>
+      <Container
+        sx={{ maxWidth: "1300px", p: { xs: 1, sm: 3 }, position: "relative" }}
+      >
+        <Container maxWidth="md" sx={{ mt: { xs: 2, sm: 10 } }}>
+          <Card sx={{ p: { xs: 2, sm: 6 }, boxShadow: 4 }}>
             <Stack
               direction={{ md: "row", justifyContent: "center" }}
               spacing={4}
@@ -82,15 +84,19 @@ function Product() {
                     height="300"
                     image={fetchProduct.image}
                     alt=""
-                    sx={{ width: "250px" }}
+                    sx={{
+                      // backgroundPosition: "top",
+                      objectFit: "contain",
+                      width: { xs: 1, sm: "250px" },
+                    }}
                   />
                   <Box>
-                    <CardContent>
+                    <CardContent sx={{ p: 0 }}>
                       <Typography
                         gutterBottom
                         variant="h5"
                         component="div"
-                        sx={{ fontWeight: 600 }}
+                        sx={{ pt: 2, fontWeight: 600 }}
                       >
                         {fetchProduct.title}
                       </Typography>
@@ -98,21 +104,33 @@ function Product() {
                         {fetchProduct.description}
                       </Typography>
                       <Typography
-                        variant="h3"
-                        color="text.secondary"
-                        sx={{ pt: 2 }}
+                        // variant="h3"
+                        // color="text.secondary"
+                        sx={{
+                          fontSize: {
+                            xs: "2rem",
+                            md: "3rem",
+                          },
+                          pt: 2,
+                          color: "#f57c00",
+                        }}
                       >
-                        {fetchProduct.price}
+                        ${fetchProduct.price}
                       </Typography>
                     </CardContent>
                     <Typography sx={{ fontWeight: 600 }}>Quantity:</Typography>
-                    <Stack direction="row" spacing={4} alignItems="center">
+                    <Stack
+                      direction="row"
+                      spacing={{ xs: 1, sm: 3 }}
+                      alignItems="center"
+                    >
                       <Button
                         sx={{
                           width: "5px",
                           height: "15px",
                           py: 3,
-                          px: 6,
+                          // px: 6,
+                          px: { xs: 4, sm: 6 },
                           backgroundColor: "#eeeeee",
                           "&:hover": { backgroundColor: "#e0e0e0" },
                         }}
@@ -129,7 +147,7 @@ function Product() {
                           width: "5px",
                           height: "15px",
                           py: 3,
-                          px: 6,
+                          px: { xs: 4, sm: 6 },
                           backgroundColor: "#eeeeee",
                           "&:hover": { backgroundColor: "#e0e0e0" },
                         }}
@@ -139,33 +157,46 @@ function Product() {
                         <RemoveIcon />
                       </Button>
                     </Stack>
-                    <CardActions sx={{ px: 0 }}>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          py: 2,
-                          px: 6,
-                          backgroundColor: "#1565c0",
-                          "&:hover": { backgroundColor: "#2962ff" },
-                        }}
+                    <CardActions
+                      sx={{
+                        px: 0,
+                        justifyContent: { xs: "center", sm: "flex-start" },
+                      }}
+                    >
+                      <Stack
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing={3}
                       >
-                        Buy Now
-                      </Button>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        sx={{
-                          py: 2,
-                          px: 6,
-                          backgroundColor: "#f57c00",
-                          "&:hover": {
-                            backgroundColor: "#ff9800",
-                          },
-                        }}
-                        onClick={handleOpenLogIn}
-                      >
-                        Add to Cart
-                      </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            py: { xs: 1, sm: 2 },
+                            // py: 2,
+                            px: 6,
+                            backgroundColor: "#1565c0",
+                            "&:hover": { backgroundColor: "#2962ff" },
+                          }}
+                          onClick={handleOpenLogIn}
+                        >
+                          Buy Now
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{
+                            py: { xs: 1, sm: 2 },
+                            // py: 2,
+                            px: 6,
+                            backgroundColor: "#f57c00",
+                            "&:hover": {
+                              backgroundColor: "#ff9800",
+                            },
+                          }}
+                          onClick={handleOpenLogIn}
+                        >
+                          Add to Cart
+                        </Button>
+                      </Stack>
                     </CardActions>
                   </Box>
                 </>

@@ -32,12 +32,14 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 700,
+    width: { xs: 1, md: 700 },
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
     p: 5,
   };
+  console.log(logInemail);
+
   return (
     <>
       <div>
@@ -50,7 +52,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
           <Box sx={style}>
             {/* login card */}
             {logInCard && (
-              <div>
+              <Box sx={{ p: { xs: 3, md: 0 } }}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Welcome! Please Login to continue.
                 </Typography>
@@ -70,8 +72,14 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                   </Box>
                   here.
                 </Typography>
-                <Stack direction="row" justifyContent="space-between">
-                  <Stack spacing={4} sx={{ pt: 4, width: "400px" }}>
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  justifyContent="space-between"
+                >
+                  <Stack
+                    spacing={4}
+                    sx={{ pt: 2, width: { xs: 1, sm: 1 / 2 } }}
+                  >
                     <TextField
                       label="Phone Number or Email"
                       required
@@ -108,7 +116,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                       Forgot Password?
                     </Typography>
                   </Stack>
-                  <Stack>
+                  <Stack sx={{ pt: 2 }}>
                     <Button
                       size="small"
                       variant="contained"
@@ -159,11 +167,11 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                     </Button>
                   </Stack>
                 </Stack>
-              </div>
+              </Box>
             )}
             {/* signup card */}
             {!logInCard && (
-              <div>
+              <Box sx={{ p: { xs: 3, md: 0 } }}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Create your Wonder Mall Card
                 </Typography>
@@ -184,11 +192,14 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                   here.
                 </Typography>
                 <Stack
-                  direction="row"
+                  direction={{ xs: "column", sm: "row" }}
                   justifyContent="space-between"
                   spacing={4}
                 >
-                  <Stack spacing={3} sx={{ pt: 4, width: "50%" }}>
+                  <Stack
+                    spacing={3}
+                    sx={{ pt: 4, width: { xs: 1, sm: 1 / 2 } }}
+                  >
                     <TextField
                       label="First Name"
                       name="fName"
@@ -274,7 +285,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                       }}
                     />
                   </Stack>
-                  <Stack sx={{ pt: 3, width: "50%" }}>
+                  <Stack sx={{ pt: 3, width: { xs: 1, sm: 1 / 2 } }}>
                     <Stack direction="row">
                       <Checkbox size="small" sx={{ m: 0, p: 0 }} />
                       <Typography variant="body2" sx={{ pl: 1 }}>
@@ -344,7 +355,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                         sx={{
                           mt: 2,
                           py: 1,
-                          px: 4,
+                          px: { xs: 2, md: 4 },
                           backgroundColor: "#1565c0",
                           "&:hover": { backgroundColor: "#2962ff" },
                         }}
@@ -358,7 +369,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                         sx={{
                           mt: 2,
                           py: 1,
-                          px: 4,
+                          px: { xs: 2, md: 4 },
                           backgroundColor: "#e53935",
                           "&:hover": {
                             backgroundColor: "#f44336",
@@ -371,7 +382,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                     </Stack>
                   </Stack>
                 </Stack>
-              </div>
+              </Box>
             )}
           </Box>
         </Modal>
