@@ -14,19 +14,29 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useDispatch } from "react-redux";
+import { login } from "../reducer/userDataSlice";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
   const [logInemail, setLogInEmail] = useState("");
   const [logInpassword, setLogINPassword] = useState("");
-  const [formData, setFormData] = useState({
-    fName: "",
-    lName: "",
-    pNumber: "",
-    password: "",
-    confirmPassword: "",
-  });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [logInCard, setLogInCard] = useState(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    dispatch(login({ data, register: true }));
+    navigate("/checkout");
+  };
   const style = {
     position: "absolute",
     top: "50%",
@@ -37,8 +47,8 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
     border: "2px solid #000",
     boxShadow: 24,
     p: 5,
+    scrollable: true,
   };
-  console.log(logInemail);
 
   return (
     <>
@@ -191,197 +201,220 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                   </Box>
                   here.
                 </Typography>
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  justifyContent="space-between"
-                  spacing={4}
-                >
+                <form>
                   <Stack
-                    spacing={3}
-                    sx={{ pt: 4, width: { xs: 1, sm: 1 / 2 } }}
+                    direction={{ xs: "column", sm: "row" }}
+                    justifyContent="space-between"
+                    spacing={4}
                   >
-                    <TextField
-                      label="First Name"
-                      name="fName"
-                      size="small"
-                      required
-                      value={formData.fName}
-                      onChange={(e) => {
-                        setFormData({ ...formData, fName: e.target.value });
-                      }}
-                    />
-                    <TextField
-                      label="Last Name"
-                      name="lName"
-                      size="small"
-                      required
-                      onChange={(e) => {
-                        setFormData({ ...formData, lName: e.target.value });
-                      }}
-                    />
-                    <TextField
-                      label="Phone Number"
-                      name="pNumber"
-                      size="small"
-                      required
-                      value={formData.pNumber}
-                      onChange={(e) =>
-                        setFormData({ ...formData, pNumber: e.target.value })
-                      }
-                    />
-                    <TextField
-                      label="Password"
-                      required
-                      size="small"
-                      type={showPassword ? "text" : "password"}
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                      }
-                      fullWidth
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={(e) => setShowPassword(!showPassword)}
-                            >
-                              {showPassword ? (
-                                <VisibilityIcon />
-                              ) : (
-                                <VisibilityOffIcon />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <TextField
-                      label="Confirm Password"
-                      required
-                      size="small"
-                      type={showPassword ? "text" : "password"}
-                      value={formData.confirmPassword}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          confirmPassword: e.target.value,
-                        })
-                      }
-                      fullWidth
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={(e) => setShowPassword(!showPassword)}
-                            >
-                              {showPassword ? (
-                                <VisibilityIcon />
-                              ) : (
-                                <VisibilityOffIcon />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Stack>
-                  <Stack sx={{ pt: 3, width: { xs: 1, sm: 1 / 2 } }}>
-                    <Stack direction="row">
-                      <Checkbox size="small" sx={{ m: 0, p: 0 }} />
-                      <Typography variant="body2" sx={{ pl: 1 }}>
-                        I want to receive exclusive offers and promotions from
-                        Wonder Mall.
-                      </Typography>
+                    <Stack
+                      spacing={3}
+                      sx={{ pt: 4, width: { xs: 1, sm: 1 / 2 } }}
+                    >
+                      <TextField
+                        label="First Name"
+                        name="fName"
+                        required
+                        size="small"
+                        {...register("fName", {
+                          required: "first name is required",
+                        })}
+                        error={!!errors.fName}
+                        // helperText={errors.fName?.message}
+                      />
+                      <TextField
+                        label="Last Name"
+                        name="lName"
+                        required
+                        size="small"
+                        {...register("lName", {
+                          required: "last name is required",
+                        })}
+                        error={!!errors.lName}
+                        // helperText={errors.lName?.message}
+                      />
+                      <TextField
+                        label="Phone Number"
+                        name="pNumber"
+                        required
+                        size="small"
+                        {...register("pNumber", {
+                          required: "phone number is required",
+                        })}
+                        error={!!errors.pNumber}
+                        // helperText={errors.pNumber?.message}
+                      />
+                      <TextField
+                        label="Password"
+                        name="password"
+                        required
+                        size="small"
+                        autoComplete="password"
+                        type={showPassword ? "text" : "password"}
+                        {...register("password", {
+                          required:
+                            "Password must be 8-20 characters and include at least 1 letter, 1 number and 1 special characters",
+                          pattern:
+                            /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+                        })}
+                        error={!!errors.password}
+                        helperText={
+                          "Password must be 8-20 characters and include at least 1 letter, 1 number and 1 special characters"
+                        }
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={(e) => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? (
+                                  <VisibilityIcon />
+                                ) : (
+                                  <VisibilityOffIcon />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <TextField
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        size="small"
+                        autoComplete="password"
+                        type={showConfirmPassword ? "text" : "password"}
+                        {...register("confirmPassword", {
+                          required: true,
+                          validate: (value) => {
+                            if (watch("password") !== value) {
+                              return "Your passwords do no match";
+                            }
+                          },
+                        })}
+                        error={!!errors.confirmPassword}
+                        helperText={errors.confirmPassword?.message}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={(e) =>
+                                  setShowConfirmPassword(!showConfirmPassword)
+                                }
+                              >
+                                {showConfirmPassword ? (
+                                  <VisibilityIcon />
+                                ) : (
+                                  <VisibilityOffIcon />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
                     </Stack>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        my: 2,
-                        py: 1,
-                        px: 10,
-                        backgroundColor: "#f57c00",
-                        "&:hover": { backgroundColor: "#ff9800" },
-                      }}
-                    >
-                      sign up
-                    </Button>
-                    <Typography variant="body2">
-                      By clicking “SIGN UP”, I agree to Daraz's{" "}
-                      <Box
-                        component="span"
-                        sx={{
-                          cursor: "pointer",
-                          color: "#1565c0",
-                        }}
-                      >
-                        Terms of Use{" "}
-                      </Box>
-                      and{" "}
-                      <Box
-                        component="span"
-                        sx={{
-                          cursor: "pointer",
-                          color: "#1565c0",
-                        }}
-                      >
-                        Privacy Policy{" "}
-                      </Box>
-                    </Typography>
-                    <Typography variant="body2" sx={{ my: 1 }}>
-                      Or, signup with
-                    </Typography>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      sx={{
-                        mt: 2,
-                        py: 1,
-                        px: 10,
-                        color: "#f57c00",
-                        borderColor: "#f57c00",
-                        "&:hover": {
-                          backgroundColor: "#fff3e0",
-                          borderColor: "#ffe0b2",
-                        },
-                      }}
-                    >
-                      Sign up with Email
-                    </Button>
-                    <Stack direction="row" justifyContent="space-between">
+                    <Stack sx={{ pt: 3, width: { xs: 1, sm: 1 / 2 } }}>
+                      <Stack direction="row">
+                        <Checkbox size="small" sx={{ m: 0, p: 0 }} checked />
+                        <Typography variant="body2" sx={{ pl: 1 }}>
+                          I want to receive exclusive offers and promotions from
+                          Wonder Mall.
+                        </Typography>
+                      </Stack>
                       <Button
                         size="small"
                         variant="contained"
                         sx={{
-                          mt: 2,
+                          my: 2,
                           py: 1,
-                          px: { xs: 2, md: 4 },
-                          backgroundColor: "#1565c0",
-                          "&:hover": { backgroundColor: "#2962ff" },
+                          px: 10,
+                          backgroundColor: "#f57c00",
+                          "&:hover": { backgroundColor: "#ff9800" },
                         }}
-                        startIcon={<FacebookIcon />}
+                        onClick={handleSubmit(onSubmit)}
+                        // type="submit"
                       >
-                        Facebook
+                        sign up
                       </Button>
+
+                      <Typography variant="body2">
+                        By clicking “SIGN UP”, I agree to Daraz's{" "}
+                        <Box
+                          component="span"
+                          sx={{
+                            cursor: "pointer",
+                            color: "#1565c0",
+                          }}
+                        >
+                          Terms of Use{" "}
+                        </Box>
+                        and{" "}
+                        <Box
+                          component="span"
+                          sx={{
+                            cursor: "pointer",
+                            color: "#1565c0",
+                          }}
+                        >
+                          Privacy Policy{" "}
+                        </Box>
+                      </Typography>
+                      <Typography variant="body2" sx={{ my: 1 }}>
+                        Or, signup with
+                      </Typography>
                       <Button
                         size="small"
-                        variant="contained"
+                        variant="outlined"
                         sx={{
                           mt: 2,
                           py: 1,
-                          px: { xs: 2, md: 4 },
-                          backgroundColor: "#e53935",
+                          px: 10,
+                          color: "#f57c00",
+                          borderColor: "#f57c00",
                           "&:hover": {
-                            backgroundColor: "#f44336",
+                            backgroundColor: "#fff3e0",
+                            borderColor: "#ffe0b2",
                           },
                         }}
-                        startIcon={<GoogleIcon />}
                       >
-                        Google
+                        Sign up with Email
                       </Button>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            py: 1,
+                            px: { xs: 2, md: 4 },
+                            backgroundColor: "#1565c0",
+                            "&:hover": { backgroundColor: "#2962ff" },
+                          }}
+                          startIcon={<FacebookIcon />}
+                        >
+                          Facebook
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            py: 1,
+                            px: { xs: 2, md: 4 },
+                            backgroundColor: "#e53935",
+                            "&:hover": {
+                              backgroundColor: "#f44336",
+                            },
+                          }}
+                          startIcon={<GoogleIcon />}
+                        >
+                          Google
+                        </Button>
+                      </Stack>
                     </Stack>
                   </Stack>
-                </Stack>
+                </form>
               </Box>
             )}
           </Box>
