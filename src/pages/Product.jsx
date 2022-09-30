@@ -17,7 +17,7 @@ import {
 
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { addToCarT, removeFromCart } from "../reducer/ProductSlice";
+import { addToCart, removeFromCart } from "../reducer/ProductSlice";
 import Navbar from "../components/Navbar";
 import LogInCard from "../components/LogInCard";
 
@@ -27,7 +27,7 @@ function Product() {
 
   let { productId } = useParams();
   const dispatch = useDispatch();
-  const productInStore = useSelector((state) => state.productList.products);
+  const productInCart = useSelector((state) => state.productList.productInCart);
   const baseURL = `https://fakestoreapi.com/products/${productId}`;
   const getProductList = async () => {
     await axios
@@ -56,7 +56,7 @@ function Product() {
   }, []);
 
   const handleAddItemToStore = (fetchProduct) => {
-    dispatch(addToCarT(fetchProduct));
+    dispatch(addToCart(fetchProduct));
   };
   const handleRemoveItemFromStore = (fetchProduct) => {
     dispatch(removeFromCart(fetchProduct));
@@ -135,12 +135,12 @@ function Product() {
                           "&:hover": { backgroundColor: "#e0e0e0" },
                         }}
                         onClick={() => handleAddItemToStore(fetchProduct)}
-                        disabled={productInStore.length === 5 ? true : false}
+                        disabled={productInCart.length === 10 ? true : false}
                       >
                         <AddIcon sx={{ color: "" }} />
                       </Button>
                       <Typography sx={{ fontSize: "40px" }}>
-                        {productInStore.length}
+                        {productInCart.length}
                       </Typography>
                       <Button
                         sx={{
@@ -152,7 +152,7 @@ function Product() {
                           "&:hover": { backgroundColor: "#e0e0e0" },
                         }}
                         onClick={() => handleRemoveItemFromStore(fetchProduct)}
-                        disabled={productInStore.length === 0 ? true : false}
+                        disabled={productInCart.length === 0 ? true : false}
                       >
                         <RemoveIcon />
                       </Button>

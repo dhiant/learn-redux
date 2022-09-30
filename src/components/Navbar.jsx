@@ -11,13 +11,20 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import { Link, NavLink } from "react-router-dom";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Badge } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { clearProductInCart } from "../reducer/ProductSlice";
 
-const pages = ["Products", "Log In", "Sign Up"];
+const pages = ["all products", "Log In", "Sign Up"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const productInCart = useSelector((state) => state.productList.productInCart);
+  const dispatch = useDispatch();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -26,7 +33,10 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (page) => {
+    if (page === "all products") {
+      <Link to={page === "all products" ? "allproducts" : ""} />;
+    }
     setAnchorElNav(null);
   };
 
@@ -42,26 +52,32 @@ const ResponsiveAppBar = () => {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 600,
-              fontSize: "35px",
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-              py: 1,
-            }}
+          <Button
+            component={NavLink}
+            to="/"
+            color="inherit"
+            onClick={(e) => dispatch(clearProductInCart())}
           >
-            WONDERMALL
-          </Typography>
-
+            <Typography
+              variant="h6"
+              noWrap
+              // component="a"
+              // href="/"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 600,
+                fontSize: "35px",
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+                py: 1,
+              }}
+            >
+              WONDERMALL
+            </Typography>
+          </Button>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -113,14 +129,17 @@ const ResponsiveAppBar = () => {
               color: "inherit",
               textDecoration: "none",
             }}
+            onClick={(e) => dispatch(clearProductInCart())}
           >
             WONDERMALL
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
+                component={NavLink}
+                to={page === "all products" ? "/all-products" : ""}
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{
                   my: 2,
                   color: "white",
@@ -134,11 +153,20 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{ px: 5, py: 0, color: "#fff" }}
+            >
+              <Badge badgeContent={productInCart.length} color="primary">
+                <ShoppingCartIcon fontSize="large" />
+              </Badge>
+            </IconButton>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Suhant" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
+
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
