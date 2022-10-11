@@ -14,28 +14,40 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useDispatch } from "react-redux";
-import { login } from "../reducer/userDataSlice";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+// import { login, register } from "../reducer/userDataSlice";
+// import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import {
+  signInWithGogglePop,
+  signInWithGoogleRedirect,
+} from "../utils/firebase";
 
 const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
-  const [logInemail, setLogInEmail] = useState("");
-  const [logInpassword, setLogINPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [logInCard, setLogInCard] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const registeredUser = useSelector((state) => state.userData.users);
+  console.log(registeredUser);
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    dispatch(login({ data, register: true }));
-    navigate("/checkout");
+  const onRegister = (data) => {
+    let registerData = {
+      fName: data.fName,
+      lName: data.lName,
+      registerPhoneNumber: data.registerPhoneNumber,
+      password: data.password,
+    };
+    console.log(registerData);
+    dispatch(register(registerData));
+    console.log(registeredUser);
+    // navigate("/checkout");
   };
   const style = {
     position: "absolute",
@@ -49,7 +61,19 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
     p: 5,
     scrollable: true,
   };
-
+  const onLogin = (data) => {
+    // dispatch()
+    console.log(data);
+  };
+  const logGoggleUser = async () => {
+    if (window.screen.width > 600) {
+      const response = await signInWithGogglePop();
+      console.log(response);
+    } else {
+      const response = await signInWithGoogleRedirect();
+      console.log(response);
+    }
+  };
   return (
     <>
       <div>
@@ -82,101 +106,113 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                   </Box>
                   here.
                 </Typography>
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  justifyContent="space-between"
-                >
+                <form>
                   <Stack
-                    spacing={4}
-                    sx={{ pt: 2, width: { xs: 1, sm: 1 / 2 } }}
+                    direction={{ xs: "column", sm: "row" }}
+                    justifyContent="space-between"
                   >
-                    <TextField
-                      label="Phone Number or Email"
-                      required
-                      size="small"
-                      fullWidth
-                      value={logInemail}
-                      onChange={(e) => setLogInEmail(e.target.value)}
-                    />
-                    <TextField
-                      label="Password"
-                      required
-                      size="small"
-                      type={showPassword ? "text" : "password"}
-                      value={logInpassword}
-                      onChange={(e) => setLogINPassword(e.target.value)}
-                      fullWidth
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={(e) => setShowPassword(!showPassword)}
-                            >
-                              {showPassword ? (
-                                <VisibilityIcon />
-                              ) : (
-                                <VisibilityOffIcon />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <Typography color="primary" sx={{ cursor: "pointer" }}>
-                      Forgot Password?
-                    </Typography>
-                  </Stack>
-                  <Stack sx={{ pt: 2 }}>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        mb: 1,
-                        py: 1,
-                        px: 10,
+                    <Stack
+                      spacing={4}
+                      sx={{ pt: 2, width: { xs: 1, sm: 1 / 2 } }}
+                    >
+                      <TextField
+                        label="Phone Number or Email"
+                        required
+                        size="small"
+                        fullWidth
+                        {...register("loginPhoneNumber", {
+                          required: true,
+                        })}
+                        error={!!errors.loginPhoneNumber}
+                        // helperText={errors.loginPhoneNumber?.message}
+                      />
+                      <TextField
+                        label="Password"
+                        required
+                        size="small"
+                        autoComplete="password"
+                        type={showPassword ? "text" : "password"}
+                        {...register("loginPassword", {
+                          required: true,
+                        })}
+                        error={!!errors.logInpassword}
+                        // helperText={errors.logInpassword?.message}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={(e) => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? (
+                                  <VisibilityIcon />
+                                ) : (
+                                  <VisibilityOffIcon />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <Typography color="primary" sx={{ cursor: "pointer" }}>
+                        Forgot Password?
+                      </Typography>
+                    </Stack>
+                    <Stack sx={{ pt: 2 }}>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        sx={{
+                          mb: 1,
+                          py: 1,
+                          px: 10,
 
-                        backgroundColor: "#f57c00",
-                        "&:hover": {
-                          backgroundColor: "#ff9800",
-                        },
-                      }}
-                    >
-                      LOGIN
-                    </Button>
-                    <Typography variant="body2">Or, login with</Typography>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        mt: 2,
-                        py: 1,
-                        px: 10,
-                        backgroundColor: "#1565c0",
-                        "&:hover": { backgroundColor: "#2962ff" },
-                      }}
-                      startIcon={<FacebookIcon />}
-                    >
-                      Facebook
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        mt: 2,
-                        py: 1,
-                        px: 10,
+                          backgroundColor: "#f57c00",
+                          "&:hover": {
+                            backgroundColor: "#ff9800",
+                          },
+                        }}
+                        type="submit"
+                        onClick={handleSubmit(onLogin)}
+                      >
+                        LOGIN
+                      </Button>
+                      <Typography variant="body2">Or, login with</Typography>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        sx={{
+                          mt: 2,
+                          py: 1,
+                          px: 10,
+                          backgroundColor: "#1565c0",
+                          "&:hover": { backgroundColor: "#2962ff" },
+                        }}
+                        startIcon={<FacebookIcon />}
+                      >
+                        Facebook
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        sx={{
+                          mt: 2,
+                          py: 1,
+                          px: 10,
 
-                        backgroundColor: "#e53935",
-                        "&:hover": {
-                          backgroundColor: "#f44336",
-                        },
-                      }}
-                      startIcon={<GoogleIcon />}
-                    >
-                      Google
-                    </Button>
+                          backgroundColor: "#e53935",
+                          "&:hover": {
+                            backgroundColor: "#f44336",
+                          },
+                        }}
+                        startIcon={<GoogleIcon />}
+                        onClick={logGoggleUser}
+                      >
+                        Google
+                      </Button>
+                    </Stack>
                   </Stack>
-                </Stack>
+                </form>
               </Box>
             )}
             {/* signup card */}
@@ -213,7 +249,6 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                     >
                       <TextField
                         label="First Name"
-                        name="fName"
                         required
                         size="small"
                         {...register("fName", {
@@ -224,7 +259,6 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                       />
                       <TextField
                         label="Last Name"
-                        name="lName"
                         required
                         size="small"
                         {...register("lName", {
@@ -235,18 +269,16 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                       />
                       <TextField
                         label="Phone Number"
-                        name="pNumber"
                         required
                         size="small"
-                        {...register("pNumber", {
+                        {...register("registerPhoneNumber", {
                           required: "phone number is required",
                         })}
-                        error={!!errors.pNumber}
-                        // helperText={errors.pNumber?.message}
+                        error={!!errors.registerPhoneNumber}
+                        // helperText={errors.registerPhoneNumber?.message}
                       />
                       <TextField
                         label="Password"
-                        name="password"
                         required
                         size="small"
                         autoComplete="password"
@@ -280,7 +312,6 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                       />
                       <TextField
                         label="Confirm Password"
-                        name="confirmPassword"
                         size="small"
                         autoComplete="password"
                         type={showConfirmPassword ? "text" : "password"}
@@ -332,8 +363,8 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                           backgroundColor: "#f57c00",
                           "&:hover": { backgroundColor: "#ff9800" },
                         }}
-                        onClick={handleSubmit(onSubmit)}
-                        // type="submit"
+                        onClick={handleSubmit(onRegister)}
+                        type="submit"
                       >
                         sign up
                       </Button>
@@ -408,6 +439,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                             },
                           }}
                           startIcon={<GoogleIcon />}
+                          onClick={logGoggleUser}
                         >
                           Google
                         </Button>
