@@ -4,6 +4,7 @@ import {
   signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -26,3 +27,33 @@ export const auth = getAuth(firebaseApp);
 export const signInWithGogglePop = () => signInWithPopup(auth, provider);
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, provider);
+
+const facebookProvider = new FacebookAuthProvider();
+
+export const signInWithFacebookPop = () => {
+  signInWithPopup(auth, facebookProvider)
+    .then((result) => {
+      // The signed-in user info.
+      const user = result.user;
+
+      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential.accessToken;
+
+      // ...
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = FacebookAuthProvider.credentialFromError(error);
+
+      // ...
+    });
+};
+export const signInWithFacebookRedirect = () => {
+  signInWithRedirect(auth, facebookProvider);
+};

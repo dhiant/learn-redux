@@ -21,6 +21,8 @@ import { useForm } from "react-hook-form";
 import {
   signInWithGogglePop,
   signInWithGoogleRedirect,
+  signInWithFacebookPop,
+  signInWithFacebookRedirect,
 } from "../utils/firebase";
 
 const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
@@ -74,6 +76,16 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
       console.log(response);
     }
   };
+  const logFacebookUser = async () => {
+    if (window.screen.width > 600) {
+      const response = await signInWithFacebookPop();
+      console.log(response);
+    } else {
+      const response = await signInWithFacebookRedirect();
+      console.log(response);
+    }
+  };
+
   return (
     <>
       <div>
@@ -189,6 +201,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                           "&:hover": { backgroundColor: "#2962ff" },
                         }}
                         startIcon={<FacebookIcon />}
+                        onClick={logFacebookUser}
                       >
                         Facebook
                       </Button>
@@ -423,6 +436,7 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
                             "&:hover": { backgroundColor: "#2962ff" },
                           }}
                           startIcon={<FacebookIcon />}
+                          onClick={logFacebookUser}
                         >
                           Facebook
                         </Button>
