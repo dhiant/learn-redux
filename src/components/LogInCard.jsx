@@ -9,30 +9,31 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useDispatch, useSelector } from "react-redux";
 // import { login, register } from "../reducer/userDataSlice";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   signInWithGogglePop,
   signInWithGoogleRedirect,
   signInWithFacebookPop,
   signInWithFacebookRedirect,
+  auth,
 } from "../utils/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [logInCard, setLogInCard] = useState(true);
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const registeredUser = useSelector((state) => state.userData.users);
-  console.log(registeredUser);
   const {
     register,
     handleSubmit,
@@ -86,6 +87,16 @@ const LogInCard = ({ showLogInCard, handleCloseLogIn }) => {
     }
   };
 
+  useEffect(() => {
+    const user = () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          navigate("/checkout");
+        }
+      });
+    };
+    return user();
+  }, []);
   return (
     <>
       <div>

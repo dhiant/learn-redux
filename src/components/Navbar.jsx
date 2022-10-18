@@ -16,6 +16,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Badge } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { clearProductInCart } from "../reducer/ProductSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const pages = ["all products", "Log In", "Sign Up"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -40,8 +42,13 @@ const ResponsiveAppBar = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleCloseUserMenu = (logout) => {
+    if (logout === "logout") {
+      signOut(auth);
+      setAnchorElUser(null);
+    } else {
+      setAnchorElUser(null);
+    }
   };
 
   return (
@@ -137,7 +144,15 @@ const ResponsiveAppBar = () => {
             {pages.map((page) => (
               <Button
                 component={NavLink}
-                to={page === "all products" ? "/all-products" : ""}
+                to={
+                  page === "all products"
+                    ? "/all-products"
+                    : page === "Log In"
+                    ? "/log-in"
+                    : page === "Sign Up"
+                    ? "/sign-up"
+                    : " "
+                }
                 key={page}
                 onClick={() => handleCloseNavMenu(page)}
                 sx={{
@@ -184,7 +199,10 @@ const ResponsiveAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => handleCloseUserMenu("logout")}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
