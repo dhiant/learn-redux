@@ -37,13 +37,39 @@ export const productSlice = createSlice({
       state.products.push(action.payload);
     },
     addToCart: (state, action) => {
-      state.productInCart.push(action.payload);
+      if (state.productInCart.length === 0) {
+        state.productInCart.unshift(action.payload);
+      } else {
+        // need to convert proxy into json string first and then get js object after json.parse method
+        let productIdInReduxStore = JSON.parse(
+          JSON.stringify(state.productInCart[0].fetchProduct.id)
+        );
+        let productIdFromActionPayload = action.payload.fetchProduct.id;
+
+        if (productIdInReduxStore !== productIdFromActionPayload) {
+          state.productInCart.unshift();
+        } else {
+          state.productInCart.shift(action.payload);
+        }
+      }
+      // console.log(
+      //   "action payload",
+      //   action.payload.fetchProduct.id,
+      //   "store id",
+      //   JSON.parse(JSON.stringify(state.productInCart[0].fetchProduct.id))
+      // );
     },
     removeFromCart: (state, action) => {
       state.productInCart.pop(action.payload);
     },
     clearProductInCart: (state) => {
       state.productInCart = [];
+    },
+    incrementProductQuantity: (state) => {
+      state.productInCart[0].productQuantity += 1;
+    },
+    decrementProductQuantity: (state) => {
+      state.productInCart[0].productQuantity -= 1;
     },
     isFetching: (state) => {
       state.fetching = true;
@@ -56,6 +82,8 @@ export const {
   clearProductInCart,
   addToCart,
   removeFromCart,
+  incrementProductQuantity,
+  decrementProductQuantity,
   isFetching,
 } = productSlice.actions;
 export default productSlice.reducer;
