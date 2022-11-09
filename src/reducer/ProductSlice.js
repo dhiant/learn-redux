@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -38,26 +38,20 @@ export const productSlice = createSlice({
     },
     addToCart: (state, action) => {
       if (state.productInCart.length === 0) {
-        state.productInCart.unshift(action.payload);
+        state.productInCart.push(action.payload);
       } else {
-        // need to convert proxy into json string first and then get js object after json.parse method
-        let productIdInReduxStore = JSON.parse(
-          JSON.stringify(state.productInCart[0].fetchProduct.id)
-        );
-        let productIdFromActionPayload = action.payload.fetchProduct.id;
-
-        if (productIdInReduxStore !== productIdFromActionPayload) {
-          state.productInCart.unshift();
-        } else {
-          state.productInCart.shift(action.payload);
+        let productExists = false;
+        state.productInCart.forEach((product) => {
+          console.log(current(product));
+          if (product.fetchProduct.id === action.payload.fetchProduct.id) {
+            product.productQuantity += action.payload.productQuantity;
+            productExists = true;
+          }
+        });
+        if (!productExists) {
+          state.productInCart.push(action.payload);
         }
       }
-      // console.log(
-      //   "action payload",
-      //   action.payload.fetchProduct.id,
-      //   "store id",
-      //   JSON.parse(JSON.stringify(state.productInCart[0].fetchProduct.id))
-      // );
     },
     removeFromCart: (state, action) => {
       state.productInCart.pop(action.payload);

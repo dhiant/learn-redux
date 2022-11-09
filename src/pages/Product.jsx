@@ -70,23 +70,7 @@ function Product() {
   };
 
   const handleAddItemToStore = (fetchProduct) => {
-    // if there is no item in array, add the product
-    if (productInCart.length === 0) {
-      dispatch(addToCart({ productQuantity, fetchProduct }));
-    } else {
-      // if the productId in redux store doesn't match with fetchProduct id
-      for (let productDetail of productInCart) {
-        // console.log(
-        //   "productDetail",
-        //   productDetail.fetchProduct.id,
-        //   "fetchproduct",
-        //   fetchProduct.id
-        // );
-        if (productDetail.fetchProduct.id !== fetchProduct.id) {
-          dispatch(addToCart({ productQuantity, fetchProduct }));
-        }
-      }
-    }
+    dispatch(addToCart({ productQuantity, fetchProduct }));
   };
 
   const handleOpenLogIn = () => {

@@ -10,14 +10,14 @@ import {
   CardActionArea,
   Box,
 } from "@mui/material";
-import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Container } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProduct, isFetching } from "../reducer/ProductSlice";
+import { addToCart, fetchProduct, isFetching } from "../reducer/ProductSlice";
 
 const Home = () => {
   const [showConnectionTimeOut, setShowConnectionTimeOut] = useState(false);
+
   const dispatch = useDispatch();
   const productInStore = useSelector((state) => state.productList.products);
   const fetchingData = useSelector((state) => state.productList.fetching);
@@ -32,6 +32,7 @@ const Home = () => {
     dispatch(isFetching());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <>
       {productInStore.length === 0 ? (
@@ -52,7 +53,6 @@ const Home = () => {
         )
       ) : (
         <>
-          <Navbar />
           <Container maxWidth="xl">
             <Box sx={{ xs: { px: 4 }, mx: "auto" }}>
               <Grid
@@ -64,8 +64,9 @@ const Home = () => {
                 }}
                 sx={{ py: 8 }}
               >
-                {productInStore[0].map((product) => (
-                  <Grid item key={product.id} sx={{ mb: 6 }}>
+                {productInStore[0].map((fetchProduct) => (
+                  <Grid item key={fetchProduct.id} sx={{ mb: 6 }}>
+                    {console.log(fetchProduct)}
                     <Card
                       sx={{
                         width: { xs: 260, sm: 300, md: 350, lg: 400, xl: 400 },
@@ -77,11 +78,11 @@ const Home = () => {
                       }}
                     >
                       <CardActionArea>
-                        <Link to={`product/${product.id}`}>
+                        <Link to={`product/${fetchProduct.id}`}>
                           <CardMedia
                             component="img"
                             height="300"
-                            image={product.image}
+                            image={fetchProduct.image}
                             sx={{ objectFit: "contain" }}
                           />
                         </Link>
@@ -92,13 +93,13 @@ const Home = () => {
                             gutterBottom
                             sx={{ fontWeight: 600 }}
                           >
-                            {product.title}
+                            {fetchProduct.title}
                           </Typography>
                           <Typography
                             sx={{ fontSize: "25px", color: "#f57c00" }}
                           >
                             <span>$</span>
-                            {product.price}
+                            {fetchProduct.price}
                           </Typography>
                         </CardContent>
                       </CardActionArea>
@@ -107,7 +108,8 @@ const Home = () => {
                           size="large"
                           color="primary"
                           variant="outlined"
-                          href={`product/${product.id}`}
+                          component={Link}
+                          to={`product/${fetchProduct.id}`}
                           sx={{
                             fontSize: "20px",
                             fontWeight: 600,
@@ -118,6 +120,33 @@ const Home = () => {
                           }}
                         >
                           Details
+                        </Button>
+                        <Button
+                          size="large"
+                          variant="outlined"
+                          sx={{
+                            fontSize: "20px",
+                            fontWeight: 500,
+                            borderWidth: 2,
+                            textTransform: "none",
+                            position: "absolute",
+                            bottom: "40px",
+                            right: "100px",
+                            color: "#fff",
+                            backgroundColor: "#f57c00",
+                            borderColor: "#f57c00",
+                            "&:hover": {
+                              backgroundColor: "#ff9800",
+                              borderColor: "#f57c00",
+                            },
+                          }}
+                          onClick={() =>
+                            dispatch(
+                              addToCart({ productQuantity: 1, fetchProduct })
+                            )
+                          }
+                        >
+                          Add to Cart
                         </Button>
                       </CardActions>
                     </Card>
