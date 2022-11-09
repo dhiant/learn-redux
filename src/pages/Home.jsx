@@ -9,18 +9,40 @@ import {
   Button,
   CardActionArea,
   Box,
+  Modal,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Container } from "@mui/system";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchProduct, isFetching } from "../reducer/ProductSlice";
 
+const style = (theme) => ({
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  minWidth: "250px",
+  bgcolor: "background.paper",
+  border: "none",
+  boxShadow: 24,
+  px: 4,
+  py: 3,
+  [theme.breakpoints.up("sm")]: {
+    width: "max-content",
+  },
+});
+
 const Home = () => {
   const [showConnectionTimeOut, setShowConnectionTimeOut] = useState(false);
+  const [showItemAddedModal, setShowItemAddedModal] = useState(false);
 
   const dispatch = useDispatch();
   const productInStore = useSelector((state) => state.productList.products);
   const fetchingData = useSelector((state) => state.productList.fetching);
+
+  const handleShowItemAddedModal = () => setShowItemAddedModal(true);
+  const handleHideItemAddedModal = () => setShowItemAddedModal(false);
 
   useEffect(() => {
     if (productInStore.length === 0) {
@@ -39,15 +61,15 @@ const Home = () => {
         showConnectionTimeOut ? (
           <Box maxWidth="md">
             <Typography
-              variant="h3"
+              variant="h5"
               color="text.secondary"
-              sx={{ py: 4, letterSpacing: "2px", lineHeight: "4.5rem" }}
+              sx={{ py: 6, pl: 3 }}
             >
               Connection timed out
             </Typography>
           </Box>
         ) : (
-          <Typography variant="h6" sx={{ py: 4 }}>
+          <Typography variant="h6" sx={{ py: 6, pl: 3 }}>
             Loading...
           </Typography>
         )
@@ -135,11 +157,12 @@ const Home = () => {
                             borderColor: "#f57c00",
                           },
                         }}
-                        onClick={() =>
+                        onClick={() => {
                           dispatch(
                             addToCart({ productQuantity: 1, fetchProduct })
-                          )
-                        }
+                          );
+                          handleShowItemAddedModal();
+                        }}
                       >
                         Add to Cart
                       </Button>
@@ -148,6 +171,39 @@ const Home = () => {
                 </Grid>
               ))}
             </Grid>
+            {/* Item added modal goes here */}
+            {showItemAddedModal && (
+              <Modal
+                open={showItemAddedModal}
+                onClose={handleHideItemAddedModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <CancelIcon
+                    sx={{
+                      position: "absolute",
+                      right: "5px",
+                      top: "5px",
+                      cursor: "pointer",
+                      fill: "green",
+                      fontSize: "30px",
+                    }}
+                    onClick={handleHideItemAddedModal}
+                  />
+                  <Typography
+                    id="modal-modal-title"
+                    variant="caption"
+                    component="h2"
+                    color="green"
+                    align="center"
+                    sx={{ lineHeight: "30px", fontSize: { sm: "20px" } }}
+                  >
+                    Product has been added to your cart.
+                  </Typography>
+                </Box>
+              </Modal>
+            )}
           </Container>
         </>
       )}
