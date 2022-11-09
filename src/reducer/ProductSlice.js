@@ -10,9 +10,7 @@ const initialState = {
 export const fetchProduct = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get(
-        "https://fakestoreapi.com/products/category/women's%20clothing"
-      );
+      const response = await axios.get("https://fakestoreapi.com/products");
       let products = response.data;
       dispatch(allProducts(products));
     } catch (error) {

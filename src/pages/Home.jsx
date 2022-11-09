@@ -53,107 +53,101 @@ const Home = () => {
         )
       ) : (
         <>
-          <Container maxWidth="xl">
-            <Box sx={{ xs: { px: 4 }, mx: "auto" }}>
-              <Grid
-                container
-                spacing={6}
-                justifyContent={{
-                  xs: "center",
-                  xl: "space-between",
-                }}
-                sx={{ py: 8 }}
-              >
-                {productInStore[0].map((fetchProduct) => (
-                  <Grid item key={fetchProduct.id} sx={{ mb: 6 }}>
-                    {console.log(fetchProduct)}
-                    <Card
-                      sx={{
-                        width: { xs: 260, sm: 300, md: 350, lg: 400, xl: 400 },
-                        height: 1,
-                        px: 2,
-                        py: 4,
-                        boxShadow: 8,
-                        position: "relative",
-                      }}
-                    >
-                      <CardActionArea>
-                        <Link to={`product/${fetchProduct.id}`}>
-                          <CardMedia
-                            component="img"
-                            height="300"
-                            image={fetchProduct.image}
-                            sx={{ objectFit: "contain" }}
-                          />
-                        </Link>
-                        <CardContent>
-                          <Typography
-                            variant="h6"
-                            component="div"
-                            gutterBottom
-                            sx={{ fontWeight: 600 }}
-                          >
-                            {fetchProduct.title}
-                          </Typography>
-                          <Typography
-                            sx={{ fontSize: "25px", color: "#f57c00" }}
-                          >
-                            <span>$</span>
-                            {fetchProduct.price}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                      <CardActions sx={{ py: 2, px: 0 }}>
-                        <Button
-                          size="large"
-                          color="primary"
-                          variant="outlined"
-                          component={Link}
-                          to={`product/${fetchProduct.id}`}
+          <Container maxWidth="xl" sx={{ px: 0 }}>
+            <Grid container spacing={6} justifyContent="center" sx={{ py: 8 }}>
+              {productInStore[0].map((fetchProduct) => (
+                <Grid item key={fetchProduct.id} sx={{ mb: 6 }}>
+                  <Card
+                    sx={{
+                      width: { xs: 300, sm: 300 },
+                      height: 1,
+                      px: 2,
+                      py: 4,
+                      boxShadow: 3,
+                      position: "relative",
+                    }}
+                  >
+                    <CardActionArea>
+                      <Link to={`product/${fetchProduct.id}`}>
+                        <CardMedia
+                          component="img"
+                          height="200"
+                          image={fetchProduct.image}
+                          sx={{ objectFit: "contain" }}
+                        />
+                      </Link>
+                      <CardContent>
+                        <Typography
+                          variant="h6"
                           sx={{
-                            fontSize: "20px",
                             fontWeight: 600,
-                            borderWidth: 2,
-                            textTransform: "none",
-                            position: "absolute",
-                            bottom: "40px",
+                            display: "block",
+                            textOverflow: "ellipsis",
+                            wordWrap: "break-word",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            maxHeight: "2em",
+                            lineHeight: "1em",
                           }}
                         >
-                          Details
-                        </Button>
-                        <Button
-                          size="large"
-                          variant="outlined"
-                          sx={{
-                            fontSize: "20px",
-                            fontWeight: 500,
-                            borderWidth: 2,
-                            textTransform: "none",
-                            position: "absolute",
-                            bottom: "40px",
-                            right: "100px",
-                            color: "#fff",
-                            backgroundColor: "#f57c00",
+                          {fetchProduct.title}
+                        </Typography>
+                        <Typography sx={{ fontSize: "25px", color: "#f57c00" }}>
+                          <span>$</span>
+                          {fetchProduct.price}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions sx={{ py: 1, px: 0 }}>
+                      <Button
+                        size="medium"
+                        color="primary"
+                        variant="outlined"
+                        component={Link}
+                        to={`product/${fetchProduct.id}`}
+                        sx={{
+                          fontSize: "20px",
+                          fontWeight: 600,
+                          borderWidth: 2,
+                          textTransform: "none",
+                          position: "absolute",
+                          bottom: "40px",
+                        }}
+                      >
+                        Details
+                      </Button>
+                      <Button
+                        size="medium"
+                        variant="outlined"
+                        sx={{
+                          fontSize: "20px",
+                          fontWeight: 500,
+                          borderWidth: 2,
+                          textTransform: "none",
+                          position: "absolute",
+                          bottom: "40px",
+                          right: "15px",
+                          color: "#fff",
+                          backgroundColor: "#f57c00",
+                          borderColor: "#f57c00",
+                          "&:hover": {
+                            backgroundColor: "#ff9800",
                             borderColor: "#f57c00",
-                            "&:hover": {
-                              backgroundColor: "#ff9800",
-                              borderColor: "#f57c00",
-                            },
-                          }}
-                          onClick={() =>
-                            dispatch(
-                              addToCart({ productQuantity: 1, fetchProduct })
-                            )
-                          }
-                        >
-                          Add to Cart
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
+                          },
+                        }}
+                        onClick={() =>
+                          dispatch(
+                            addToCart({ productQuantity: 1, fetchProduct })
+                          )
+                        }
+                      >
+                        Add to Cart
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Container>
         </>
       )}
