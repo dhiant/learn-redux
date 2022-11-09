@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -37,20 +37,13 @@ export const productSlice = createSlice({
       state.products.push(action.payload);
     },
     addToCart: (state, action) => {
-      if (state.productInCart.length === 0) {
-        state.productInCart.push(action.payload);
+      const productExists = state.productInCart.find(
+        (product) => product.fetchProduct.id === action.payload.fetchProduct.id
+      );
+      if (productExists) {
+        productExists.productQuantity += action.payload.productQuantity;
       } else {
-        let productExists = false;
-        state.productInCart.forEach((product) => {
-          console.log(current(product));
-          if (product.fetchProduct.id === action.payload.fetchProduct.id) {
-            product.productQuantity += action.payload.productQuantity;
-            productExists = true;
-          }
-        });
-        if (!productExists) {
-          state.productInCart.push(action.payload);
-        }
+        state.productInCart.push(action.payload);
       }
     },
     removeFromCart: (state, action) => {
