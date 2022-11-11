@@ -40,8 +40,18 @@ const Home = () => {
   const dispatch = useDispatch();
   const productInStore = useSelector((state) => state.productList.products);
   const fetchingData = useSelector((state) => state.productList.fetching);
+  const productInCart = useSelector((state) => state.productList.productInCart);
 
-  const handleShowItemAddedModal = () => setShowItemAddedModal(true);
+  const handleShowItemAddedModal = (id) => {
+    let showModal = productInCart.find(
+      (product) => product.fetchProduct.id === id
+    );
+    if (!showModal) {
+      setShowItemAddedModal(true);
+    } else {
+      setShowItemAddedModal(false);
+    }
+  };
   const handleHideItemAddedModal = () => setShowItemAddedModal(false);
 
   useEffect(() => {
@@ -161,7 +171,7 @@ const Home = () => {
                           dispatch(
                             addToCart({ productQuantity: 1, fetchProduct })
                           );
-                          handleShowItemAddedModal();
+                          handleShowItemAddedModal(fetchProduct.id);
                         }}
                       >
                         Add to Cart
