@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Button,
   CardActions,
@@ -31,7 +31,6 @@ function Product() {
 
   let { productId } = useParams();
   const dispatch = useDispatch();
-  const productInCart = useSelector((state) => state.productList.productInCart);
   const baseURL = `https://fakestoreapi.com/products/${productId}`;
 
   const style = {
@@ -96,8 +95,8 @@ function Product() {
       <Container
         sx={{ maxWidth: "1300px", p: { xs: 1, sm: 3 }, position: "relative" }}
       >
-        <Container maxWidth="md" sx={{ mt: { xs: 2, sm: 10 } }}>
-          <Card sx={{ p: { xs: 2, sm: 6 }, boxShadow: 4 }}>
+        <Container maxWidth="md" sx={{ my: { xs: 2 } }}>
+          <Card sx={{ p: { xs: 2 }, boxShadow: 4 }}>
             <Stack
               direction={{ md: "row", justifyContent: "center" }}
               spacing={4}
