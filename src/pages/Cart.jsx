@@ -1,16 +1,25 @@
-import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFromCart } from "../reducer/ProductSlice";
 
 // rows of datagrid
 let product = [];
 
 const Cart = () => {
-  const [selectionModel, setSelectionModel] = useState([]);
   const [rows, setRows] = useState(product);
 
   const productInCart = useSelector((state) => state.productList.productInCart);
+  const dispatch = useDispatch();
 
   // columns of datagrid
   const columns = [
@@ -56,6 +65,8 @@ const Cart = () => {
       headerName: "Quantity",
       sortable: false,
       width: 80,
+      editable: true,
+      cellClassName: "quantity--cell",
     },
     {
       field: "price",
@@ -69,7 +80,8 @@ const Cart = () => {
       headerName: "Total",
       width: 100,
       editable: false,
-      sortable: true,
+      sortable: false,
+      valueGetter: getTotalPrice,
     },
     {
       field: "delete",
@@ -77,21 +89,23 @@ const Cart = () => {
       sortable: false,
       width: 90,
       disableColumnMenu: true,
-      // renderHeader: () => {
-      //   return (
-      //     <IconButton
-      //       onClick={() => {
-      //         const selectedIDs = new Set(selectionModel);
-      //         // you can call an API to delete the selected IDs
-      //         // and get the latest results after the deletion
-      //         // then call setRows() to update the data locally here
-      //         setRows((r) => r.filter((x) => !selectedIDs.has(x.id)));
-      //       }}
-      //     >
-      //       <DeleteIcon />
-      //     </IconButton>
-      //   );
-      // },
+      renderCell: (params) => {
+        return (
+          <IconButton
+            onClick={() => {
+              // id of selected row
+              let selectedProductId = params.id;
+
+              setRows((prev) =>
+                prev.filter((product) => product.id !== selectedProductId)
+              );
+              dispatch(removeFromCart());
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        );
+      },
     },
   ];
 
@@ -112,6 +126,11 @@ const Cart = () => {
     return newObj;
   });
 
+  function getTotalPrice(params) {
+    let newTotalPrice = +params.row.quantity * params.row.price;
+    return `${newTotalPrice || params.value}`;
+  }
+
   return (
     <>
       <Box
@@ -127,8 +146,11 @@ const Cart = () => {
         <Stack
           sx={{
             maxWidth: "1600px",
-            width: { xs: "100%", lg: "75%" },
+            width: 1,
             boxShadow: 2,
+            "& .quantity--cell": {
+              backgroundColor: "#5bace585",
+            },
           }}
         >
           {/*  */}
@@ -148,53 +170,44 @@ const Cart = () => {
             autoHeight
             rows={rows}
             columns={columns}
-            checkboxSelection
-            disableSelectionOnClick
+            checkboxSelection={false}
             disableColumnMenu
             disableColumnSelector
-            pageSize={10}
-            rowsPerPageOptions={[5]}
-            rowCount={10}
             experimentalFeatures={{ newEditingApi: true }}
-            onSelectionModelChange={(newSelectionModel) => {
-              setSelectionModel(newSelectionModel);
-            }}
-            selectionModel={selectionModel}
-            paginationMode="server"
-            keepNonExistentRowsSelected
+            hideFooter={true}
           />
         </Stack>
-        <Box
+      </Box>
+      <Box
+        sx={{
+          mr: 2,
+          width: "max-content",
+          minWidth: "200px",
+          height: "max-content",
+          boxShadow: 2,
+          p: 2,
+        }}
+      >
+        <Typography variant="h6" color="gray" sx={{ fontSize: "20px" }}>
+          No items selected
+        </Typography>
+        <Button
+          size="small"
+          variant="contained"
           sx={{
-            mr: 2,
-            width: "max-content",
-            minWidth: "200px",
-            height: "max-content",
-            boxShadow: 2,
-            p: 2,
+            py: 1,
+            px: 1,
+            width: "100%",
+            borderRadius: "20px",
+            textTransform: "none",
+            backgroundColor: "#f57c00",
+            "&:hover": {
+              backgroundColor: "#ff9800",
+            },
           }}
         >
-          <Typography variant="h6" color="gray" sx={{ fontSize: "20px" }}>
-            No items selected
-          </Typography>
-          <Button
-            size="small"
-            variant="contained"
-            sx={{
-              py: 1,
-              px: 1,
-              width: "100%",
-              borderRadius: "20px",
-              textTransform: "none",
-              backgroundColor: "#f57c00",
-              "&:hover": {
-                backgroundColor: "#ff9800",
-              },
-            }}
-          >
-            Proceed to checkout
-          </Button>
-        </Box>
+          Proceed to checkout
+        </Button>
       </Box>
     </>
   );
