@@ -15,7 +15,7 @@ import { removeFromCart } from "../reducer/ProductSlice";
 // rows of datagrid
 let product = [];
 // sum of total price of all products
-let allProductTotalPrice;
+let allProductTotalPrice = null;
 
 const Cart = () => {
   const [rows, setRows] = useState(product);
@@ -133,14 +133,32 @@ const Cart = () => {
     return `${newTotalPrice || params.value}`;
   }
 
+  function processRowUpdate(updatedRow) {
+    setRows((prevRows) => {
+      let updatedRows = prevRows.map((product) => {
+        return product.id === updatedRow.id
+          ? {
+              ...product,
+              quantity: +updatedRow.quantity,
+              total: updatedRow.total,
+            }
+          : { ...product };
+      });
+      return updatedRows;
+    });
+    return updatedRow;
+  }
+
+  function handleProcessRowUpdateError(error) {
+    console.log("erros in processRowUpdate", error);
+  }
   // calculte allProductsTotalPrice
   if (rows.length > 0) {
     allProductTotalPrice = rows.reduce((acc, product) => {
-      let totalPrice = (acc += product.total);
-      return Math.floor(totalPrice);
+      let newTotalPrice = product.quantity * product.price;
+      return (acc += newTotalPrice);
     }, 0);
   }
-
   return (
     <>
       <Box
@@ -197,64 +215,68 @@ const Cart = () => {
             experimentalFeatures={{ newEditingApi: true }}
             hideFooter={true}
             editMode="row"
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={handleProcessRowUpdateError}
           />
         </Stack>
         {/* proceed to checkout */}
-        <Box
-          sx={{
-            mr: 2,
-            width: "max-content",
-            minWidth: "200px",
-            height: "max-content",
-            boxShadow: 2,
-            p: 2,
-          }}
-        >
-          <Typography
-            variant="h1"
-            color="black"
-            sx={{ fontSize: "20px", fontWeight: 500 }}
-          >
-            {rows.length > 0 && `Total Products: `}
-            <Typography
-              component="span"
-              sx={{ fontSize: "20px", fontWeight: 500, color: "#1565c0" }}
-            >
-              {rows.length > 0 && `${rows.length}`}
-            </Typography>
-          </Typography>
-          <Typography
-            variant="h1"
-            color="black"
-            sx={{ fontSize: "20px", fontWeight: 500, pb: 2 }}
-          >
-            Cart Subtotal:{" "}
-            <Typography
-              component="span"
-              sx={{ fontSize: "20px", fontWeight: 500, color: "#f57c00" }}
-            >
-              ${allProductTotalPrice}
-            </Typography>
-          </Typography>
-          <Button
-            size="small"
-            variant="contained"
+        {rows.length > 0 && (
+          <Box
             sx={{
-              py: 1,
-              px: 1,
-
-              width: "100%",
-              borderRadius: "20px",
-              textTransform: "none",
-              backgroundColor: "#f57c00",
-              "&:hover": {
-                backgroundColor: "#ff9800",
-              },
+              mr: 2,
+              width: "max-content",
+              minWidth: "200px",
+              height: "max-content",
+              boxShadow: 2,
+              p: 2,
             }}
           >
-            Proceed to checkout
-          </Button>
-        </Box>
+            <Typography
+              variant="h1"
+              color="black"
+              sx={{ fontSize: "20px", fontWeight: 500 }}
+            >
+              Total Products:
+              <Typography
+                component="span"
+                sx={{ fontSize: "20px", fontWeight: 500, color: "#1565c0" }}
+              >
+                {rows.length}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="h1"
+              color="black"
+              sx={{ fontSize: "20px", fontWeight: 500, pb: 2 }}
+            >
+              Cart Subtotal:{" "}
+              <Typography
+                component="span"
+                sx={{ fontSize: "20px", fontWeight: 500, color: "#f57c00" }}
+              >
+                ${Math.floor(allProductTotalPrice)}
+              </Typography>
+            </Typography>
+            <Button
+              size="small"
+              variant="contained"
+              sx={{
+                py: 1,
+                px: 1,
+
+                width: "100%",
+                borderRadius: "20px",
+                textTransform: "none",
+                backgroundColor: "#f57c00",
+                "&:hover": {
+                  backgroundColor: "#ff9800",
+                },
+              }}
+            >
+              Proceed to checkout
+            </Button>
+          </Box>
+        )}
       </Box>
     </>
   );
