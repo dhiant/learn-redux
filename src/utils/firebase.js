@@ -30,29 +30,16 @@ export const signInWithGoogleRedirect = () =>
 
 const facebookProvider = new FacebookAuthProvider();
 
-export const signInWithFacebookPop = () => {
-  signInWithPopup(auth, facebookProvider)
-    .then((result) => {
-      // The signed-in user info.
-      const user = result.user;
-
-      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential.accessToken;
-
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = FacebookAuthProvider.credentialFromError(error);
-
-      // ...
-    });
+export const signInWithFacebookPop = async () => {
+  try {
+    await signInWithPopup(auth, facebookProvider);
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    console.log(errorCode, errorMessage, email);
+  }
 };
 export const signInWithFacebookRedirect = () => {
   signInWithRedirect(auth, facebookProvider);
