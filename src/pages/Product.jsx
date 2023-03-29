@@ -76,7 +76,7 @@ function Product() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setShowAddToCart(true);
-        // console.log(user);
+        dispatch(addToCart({productQuantity,fetchProduct}))
       } else {
         setShowLogInCard(true);
       }
