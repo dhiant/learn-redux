@@ -152,6 +152,7 @@ function Product() {
                     >
                       <Button
                         sx={{
+                          position:"relative",
                           width: "5px",
                           height: "15px",
                           py: 3,
@@ -163,13 +164,14 @@ function Product() {
                         onClick={() => setProductQuantity((prev) => prev + 1)}
                         disabled={productQuantity === 10 ? true : false}
                       >
-                        <AddIcon sx={{ color: "" }} />
+                        <AddIcon sx={{ color: "" ,position:"absolute"}} />
                       </Button>
                       <Typography sx={{ fontSize: "40px" }}>
                         {productQuantity}
                       </Typography>
                       <Button
                         sx={{
+                          position:"relative",
                           width: "5px",
                           height: "15px",
                           py: 3,
@@ -180,11 +182,12 @@ function Product() {
                         onClick={() => setProductQuantity((prev) => prev - 1)}
                         disabled={productQuantity === 1 ? true : false}
                       >
-                        <RemoveIcon />
+                        <RemoveIcon sx={{position:"absolute"}}/>
                       </Button>
                     </Stack>
                     <CardActions
                       sx={{
+                        mt:1,
                         px: 0,
                         justifyContent: { xs: "center", sm: "flex-start" },
                       }}
