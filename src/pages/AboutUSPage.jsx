@@ -29,7 +29,7 @@ const paragraphStyle = {
 const buttonStyle = {
 	padding: "10px 20px",
 	fontSize: "1.01rem",
-	fontWeight: "semi-bold",
+	fontWeight: "400",
 	backgroundColor: "#ff5722",
 	color: "white",
 	border: "none",
@@ -50,17 +50,17 @@ const AboutUsPage = () => {
 								sx={{
 									fontSize: { xs: "1.8rem", sm: "2.5rem" },
 									fontWeight: "bold",
-									color: "#ff5722",
+									color: "#000",
 									textAlign: "center",
 									marginBottom: "10px",
 								}}
 							>
-								Hello From Wondermall
+								Hello From <span style={{ color: "#ff5722" }}>Wondermall</span>
 							</Typography>
 							<img
 								src={aboutUsImage}
 								style={imageStyle}
-								alt="man wearing hat"
+								alt="A girl in four different dress"
 							/>
 							<Typography variant="body1" style={paragraphStyle}>
 								Wondermall is your ultimate destination for high-quality

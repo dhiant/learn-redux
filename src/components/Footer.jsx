@@ -3,7 +3,6 @@ import {
 	Container,
 	Grid,
 	Typography,
-	Link,
 	IconButton,
 	useMediaQuery,
 } from "@mui/material";
@@ -14,6 +13,7 @@ import {
 	Email,
 	Phone,
 } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const footerStyle = {
 	backgroundColor: "#263238",
@@ -67,31 +67,45 @@ const Footer = () => {
 							</Typography>
 							<div style={footerLinksStyle}>
 								<Link
-									href="/"
-									color="inherit"
-									underline="hover"
-									style={{ marginRight: "16px" }}
+									to="/"
+									style={{
+										marginRight: "16px",
+										color: "white",
+										textDecoration: "none",
+									}}
 								>
 									Home
 								</Link>
 								<Link
-									component="a"
-									href="/products"
-									color="inherit"
-									underline="hover"
-									style={{ marginRight: "16px" }}
+									to="/products"
+									style={{
+										marginRight: "16px",
+										color: "white",
+										textDecoration: "none",
+									}}
 								>
 									Products
 								</Link>
 								<Link
-									href="/about-us"
+									to="/about-us"
 									color="inherit"
 									underline="hover"
-									style={{ marginRight: "16px" }}
+									style={{
+										marginRight: "16px",
+										color: "white",
+										textDecoration: "none",
+									}}
 								>
 									About Us
 								</Link>
-								<Link href="/contact-us" color="inherit" underline="hover">
+								<Link
+									to="/contact-us"
+									style={{
+										marginRight: "16px",
+										color: "white",
+										textDecoration: "none",
+									}}
+								>
 									Contact Us
 								</Link>
 							</div>
@@ -132,13 +146,16 @@ const Footer = () => {
 							</div>
 							<Typography variant="body2" paragraph>
 								Email:{" "}
-								<Link href="mailto:info@wondermall.com" color="inherit">
+								<Link
+									href="mailto:info@wondermall.com"
+									style={{ color: "white" }}
+								>
 									info@wondermall.com
 								</Link>
 							</Typography>
 							<Typography variant="body2">
 								Phone:{" "}
-								<Link href="tel:+1234567890" color="inherit">
+								<Link href="tel:+1234567890" style={{ color: "white" }}>
 									+1 (234) 567-890
 								</Link>
 							</Typography>
