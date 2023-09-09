@@ -8,6 +8,7 @@ import Cart from "./pages/Cart";
 import { ThemeProvider, createTheme } from "@mui/material";
 import AboutUsPage from "./pages/AboutUSPage";
 import ContactUsPage from "./pages/ContactUsPage";
+import OurProducts from "./components/OurProducts";
 
 function App() {
 	// create a theme
@@ -19,7 +20,9 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route index element={<Home />} />
-					<Route path="/product/:productId" element={<Product />} />
+					<Route path="products" element={<OurProducts />} />
+					<Route path="products/:productId" element={<Product />} />
+
 					<Route path="/checkout" element={<CheckOut />} />
 					<Route path="cart" element={<Cart />} />
 					<Route path="about-us" element={<AboutUsPage />} />
