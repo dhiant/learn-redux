@@ -37,6 +37,8 @@ const HeroSection = () => {
 					</Typography>
 					<Button
 						variant="contained"
+						component="a"
+						href="#our_products"
 						sx={{
 							py: { xs: 1, sm: 1.5 },
 							px: 5,

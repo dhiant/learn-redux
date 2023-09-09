@@ -36,7 +36,7 @@ const OurProducts = ({ handleShowItemAddedModal }) => {
 	}, [dispatch, isFetchingData]);
 
 	return (
-		<>
+		<section id="our_products">
 			{productInStore.length === 0 ? (
 				showConnectionTimeOut ? (
 					<Box maxWidth="md">
@@ -165,7 +165,7 @@ const OurProducts = ({ handleShowItemAddedModal }) => {
 					</Grid>
 				</>
 			)}
-		</>
+		</section>
 	);
 };
 
