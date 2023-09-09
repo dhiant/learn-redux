@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Grid, Typography, Button } from "@mui/material";
 
 import aboutUsImage from "../assets/bg-about-us.webp";
+import { Link } from "react-router-dom";
 
 const aboutUsStyle = {
 	padding: "20px 0 40px 0",
@@ -86,7 +87,8 @@ const AboutUsPage = () => {
 							<Button
 								variant="contained"
 								style={buttonStyle}
-								href="/all-products"
+								component={Link}
+								to="/products"
 							>
 								Explore Our Collections
 							</Button>
