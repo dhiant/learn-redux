@@ -8,7 +8,7 @@ import Cart from "./pages/Cart";
 import { ThemeProvider, createTheme } from "@mui/material";
 import AboutUsPage from "./pages/AboutUSPage";
 import ContactUsPage from "./pages/ContactUsPage";
-import OurProducts from "./components/OurProducts";
+import OurProducts from "./pages/OurProducts";
 
 function App() {
 	// create a theme
