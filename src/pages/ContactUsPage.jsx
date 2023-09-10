@@ -60,12 +60,12 @@ const ContactUsPage = () => {
 					<Grid item xs={12}>
 						<div style={contactUsContentStyle}>
 							<Typography variant="h1" style={headingStyle}>
-								Contact Us
+								Contact <span style={{ color: "#ff5722" }}>Us</span>
 							</Typography>
 							<Typography variant="body1" style={paragraphStyle}>
 								Have questions or feedback? We'd love to hear from you!
 							</Typography>
-							<div style={formStyle}>
+							<form style={formStyle}>
 								<TextField
 									label="Your Name"
 									variant="outlined"
@@ -89,7 +89,7 @@ const ContactUsPage = () => {
 								<Button variant="contained" style={submitButtonStyle}>
 									Send Message
 								</Button>
-							</div>
+							</form>
 						</div>
 						<div style={contactInfoStyle}>
 							<Typography
