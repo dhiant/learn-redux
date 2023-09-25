@@ -16,6 +16,7 @@ const ProductItemCard = ({ idx, img, title, desc, rate, qty }) => {
 			// alignItems="flex-start"
 			justifyContent="space-between"
 			sx={{ p: 2 }}
+			flexDirection={{ xs: "column", lg: "row" }}
 		>
 			<Box
 				sx={{
@@ -47,7 +48,7 @@ const ProductItemCard = ({ idx, img, title, desc, rate, qty }) => {
 					/>
 				</Box>
 				{/* product title & desc */}
-				<Box>
+				<Box sx={{ textOverflow: "clip", overflow: "hidden" }}>
 					<Typography
 						variant="h2"
 						sx={{
@@ -79,8 +80,8 @@ const ProductItemCard = ({ idx, img, title, desc, rate, qty }) => {
 					<Typography
 						sx={{
 							fontSize: {
-								xs: "18px",
-								lg: "24px",
+								xs: "1rem",
+								lg: "1.5rem",
 							},
 							color: "#f57c00",
 						}}
@@ -96,6 +97,7 @@ const ProductItemCard = ({ idx, img, title, desc, rate, qty }) => {
 					display: "flex",
 					columnGap: "10px",
 					alignItems: "center",
+					mt: { xs: 1, lg: 0 },
 				}}
 			>
 				<Button
@@ -113,7 +115,10 @@ const ProductItemCard = ({ idx, img, title, desc, rate, qty }) => {
 					<AddIcon sx={{ color: "", position: "absolute" }} />
 				</Button>
 				{/* product quantity */}
-				<Typography variant="caption" sx={{ fontSize: "2rem" }}>
+				<Typography
+					variant="caption"
+					sx={{ fontSize: { xs: "1.5rem", lg: "2rem" } }}
+				>
 					{qty}
 				</Typography>
 				<Button
@@ -136,11 +141,12 @@ const ProductItemCard = ({ idx, img, title, desc, rate, qty }) => {
 			<Typography
 				sx={{
 					fontSize: {
-						xs: "1.5rem",
-						md: "2rem",
+						xs: "1rem",
+						lg: "1.5rem",
 					},
 					color: "#f57c00",
-					pt: 2,
+					pt: { lg: 2 },
+					minWidth: "100px",
 				}}
 			>
 				${(rate * qty).toFixed(2)}
